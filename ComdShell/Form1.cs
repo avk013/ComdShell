@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -36,7 +39,59 @@ namespace ComdShell
         {
             InitializeComponent();
         }
-        
+        public void writeCSV(DataGridView gridIn, string outputFile)
+        {
+            //test to see if the DataGridView has any rows
+            if (gridIn.RowCount > 0)
+            {
+                string value = "";
+                DataGridViewRow dr = new DataGridViewRow();
+                StreamWriter swOut = new StreamWriter(outputFile);
+
+                //write header rows to csv
+            /*    for (int i = 0; i <= gridIn.Columns.Count - 1; i++)
+                {
+                    if (i > 0)
+                    {
+                        swOut.Write(",");
+                    }
+                    swOut.Write(gridIn.Columns[i].HeaderText);
+                }
+
+                swOut.WriteLine();
+*/
+                //write DataGridView rows to csv
+                for (int j = 0; j <= gridIn.Rows.Count - 2; j++)
+                {
+                    if (j > 0)
+                    {
+                        swOut.WriteLine();
+                    }
+
+                    dr = gridIn.Rows[j];
+
+                    for (int i = 0; i <= gridIn.Columns.Count - 1; i++)
+                    {
+                        if (i > 0)
+                        {
+                            swOut.Write(",");
+                        }
+
+                        //value = dr.Cells[i].Value.ToString();
+                        //value = dr.Cells[i].ToString();
+                        value = dr.Cells[i].Value.ToString();
+                        //replace comma's with spaces
+                        value = value.Replace(',', ' ');
+                        //replace embedded newlines with spaces
+                        value = value.Replace(Environment.NewLine, " ");
+
+                        swOut.Write(value);
+                    }
+                }
+                swOut.Close();
+            }
+        }
+
         public static DialogResult InputBox(string title, string promptText, ref string value)
         {
             Form form = new Form();
@@ -87,12 +142,12 @@ namespace ComdShell
             if( InputBox("Введте сообщение", "Введте сообщение", ref msg) == DialogResult.OK)
              Process.Start("cmd.exe", @"/c C:\Windows\Sysnative\msg.exe * "+ msg);
         }
-        dg a1 = new dg();
+        dg aa1 = new dg();
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            a1.name = dataGridView1;
-            a1.init(4, 9, 1,1);
-            /*
+          //  aa1.name = dataGridView1;
+        //    aa1.init(4, 9, 1,1);
+            int i = 0;
             //описываем виртуальную таблицу 
             DataTable dt = new DataTable("tab0");
             DataColumn a0 = new DataColumn(i++.ToString(), typeof(String));
@@ -110,15 +165,16 @@ namespace ComdShell
 
 
             //считываем файл
-             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\rozklad0.csv";
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-              path = openFileDialog1.FileName;
+            //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\rozklad0.csv";
+            //if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            //path = openFileDialog1.FileName;
             //иначе по умолчанию
             //else path = @Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\rozklad.csv";
             //else path = @"G:\project\excell_rozklad\rozklad.csv";
             //string path = @"rozklad.csv";
-            string[] tab0 = File.ReadAllLines(path, Encoding.Default);
-
+            string path = @"e:\!\comdshell.txt";
+            string[] tab0 = File.ReadAllLines(path, Encoding.UTF8);
+           
     string[] tab0Values = null;
             DataRow dr = null;
             //помещаем файл в виртуальную таблицу
@@ -126,20 +182,46 @@ namespace ComdShell
             {
                 if (!String.IsNullOrEmpty(tab0[i]))
                 {
-                    tab0Values = tab0[i].Split(';');
+                    tab0Values = tab0[i].Split(',');
                     //создаём новую строку
                     dr = dt.NewRow();
-                    for (int j = 0; j < 8; j++)
-                    {
-                        string valp = tab0Values[j].ToUpper();
-                        dr[j] = Regex.Replace(valp, " {2,}", " ");
-                    }
+                   
+                      for (int j = 0; j < 6; j++)
+                      {
+                    string valp = tab0Values[j];
+                        // string valp = tab0Values[1].ToUpper();
+
+                        // dr[j] = Regex.Replace(valp, " {2,}", " ");
+                        dr[j] = valp;
+                       }
                     dt.Rows.Add(dr);
                 }
             }
-             dataGridView2.DataSource = dt;
-             */
+            dataGridView1.DataSource = dt;
+            /*    */
+            button1.Text = dataGridView1.Rows[0].Cells[0].Value.ToString();
+            button2.Text = dataGridView1.Rows[1].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount>3) button3.Text = dataGridView1.Rows[2].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount >4) button4.Text = dataGridView1.Rows[3].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount >5) button5.Text = dataGridView1.Rows[4].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount >6) button6.Text = dataGridView1.Rows[5].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount >7) button7.Text = dataGridView1.Rows[6].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount >8) button8.Text = dataGridView1.Rows[7].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount >9) button9.Text = dataGridView1.Rows[8].Cells[0].Value.ToString();
+        }
 
+        private void button11_Click(object sender, EventArgs e)
+        {
+            writeCSV(dataGridView1, @"e:\!\comdshell.txt");
+
+            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string comm= "\""+dataGridView1.Rows[1].Cells[1].Value.ToString()+ "\"";
+            
+            Process.Start("cmd.exe ", @"/C "+@comm);
         }
     }
 }
