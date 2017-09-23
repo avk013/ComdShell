@@ -131,7 +131,8 @@ namespace ComdShell
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            Process.Start("cmd.exe", " /K ping 8.8.8.8");
+            //Process.Start("cmd.exe", " /K ping 8.8.8.8");
+            run_pro(1);
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -145,23 +146,89 @@ namespace ComdShell
         dg aa1 = new dg();
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-          //  aa1.name = dataGridView1;
-        //    aa1.init(4, 9, 1,1);
+        
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            writeCSV(dataGridView1, @"e:\!\comdshell.txt");
+
+            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            run_pro(2);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            run_pro(3);
+            
+        }
+        void run_pro(int num_but)
+        {
+            num_but--;
+            string comm = "\"" + dataGridView1.Rows[num_but].Cells[1].Value.ToString() + "\"";
+            string atr = dataGridView1.Rows[num_but].Cells[2].Value.ToString();
+            Process.Start(@comm, @atr);
+            if (dataGridView1.Rows[num_but].Cells[3].Value.ToString() != "")
+            {
+                comm = "\"" + dataGridView1.Rows[num_but].Cells[3].Value.ToString() + "\"";
+                atr = dataGridView1.Rows[2].Cells[num_but].Value.ToString();
+                Process.Start(@comm, @atr);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            run_pro(4);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            run_pro(5);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            run_pro(6);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            run_pro(7);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            run_pro(8);
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            run_pro(9);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //  aa1.name = dataGridView1;
+            //    aa1.init(4, 9, 1,1);
             int i = 0;
             //описываем виртуальную таблицу 
             DataTable dt = new DataTable("tab0");
-            DataColumn a0 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a1 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a2 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a3 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a4 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a5 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a6 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a7 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a8 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a9 = new DataColumn(i++.ToString(), typeof(String));
-            DataColumn a10 = new DataColumn(i++.ToString(), typeof(String));
-            dt.Columns.AddRange(new DataColumn[] { a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10 });
+            DataColumn a0 = new DataColumn("название кнпк", typeof(String));
+            DataColumn a1 = new DataColumn("команда_1", typeof(String));
+            DataColumn a2 = new DataColumn("параметры_1", typeof(String));
+            DataColumn a3 = new DataColumn("команда_2", typeof(String));
+            DataColumn a4 = new DataColumn("параметры_2", typeof(String));
+            DataColumn a5 = new DataColumn("примечание", typeof(String));
+            //DataColumn a6 = new DataColumn(i++.ToString(), typeof(String));
+            //DataColumn a7 = new DataColumn(i++.ToString(), typeof(String));
+            //DataColumn a8 = new DataColumn(i++.ToString(), typeof(String));
+            //DataColumn a9 = new DataColumn(i++.ToString(), typeof(String));
+            //DataColumn a10 = new DataColumn(i++.ToString(), typeof(String));
+            dt.Columns.AddRange(new DataColumn[] { a0, a1, a2, a3, a4, a5 });//, a6, a7, a8, a9, a10 
 
 
             //считываем файл
@@ -174,8 +241,8 @@ namespace ComdShell
             //string path = @"rozklad.csv";
             string path = @"e:\!\comdshell.txt";
             string[] tab0 = File.ReadAllLines(path, Encoding.UTF8);
-           
-    string[] tab0Values = null;
+
+            string[] tab0Values = null;
             DataRow dr = null;
             //помещаем файл в виртуальную таблицу
             for (i = 0; i < tab0.Length; i++)
@@ -185,43 +252,29 @@ namespace ComdShell
                     tab0Values = tab0[i].Split(',');
                     //создаём новую строку
                     dr = dt.NewRow();
-                   
-                      for (int j = 0; j < 6; j++)
-                      {
-                    string valp = tab0Values[j];
+
+                    for (int j = 0; j < 6; j++)
+                    {
+                        string valp = tab0Values[j];
                         // string valp = tab0Values[1].ToUpper();
 
                         // dr[j] = Regex.Replace(valp, " {2,}", " ");
                         dr[j] = valp;
-                       }
+                    }
                     dt.Rows.Add(dr);
                 }
             }
             dataGridView1.DataSource = dt;
             /*    */
-            button1.Text = dataGridView1.Rows[0].Cells[0].Value.ToString();
-            button2.Text = dataGridView1.Rows[1].Cells[0].Value.ToString();
-            if (dataGridView1.RowCount>3) button3.Text = dataGridView1.Rows[2].Cells[0].Value.ToString();
-            if (dataGridView1.RowCount >4) button4.Text = dataGridView1.Rows[3].Cells[0].Value.ToString();
-            if (dataGridView1.RowCount >5) button5.Text = dataGridView1.Rows[4].Cells[0].Value.ToString();
-            if (dataGridView1.RowCount >6) button6.Text = dataGridView1.Rows[5].Cells[0].Value.ToString();
-            if (dataGridView1.RowCount >7) button7.Text = dataGridView1.Rows[6].Cells[0].Value.ToString();
-            if (dataGridView1.RowCount >8) button8.Text = dataGridView1.Rows[7].Cells[0].Value.ToString();
-            if (dataGridView1.RowCount >9) button9.Text = dataGridView1.Rows[8].Cells[0].Value.ToString();
-        }
-
-        private void button11_Click(object sender, EventArgs e)
-        {
-            writeCSV(dataGridView1, @"e:\!\comdshell.txt");
-
-            
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string comm= "\""+dataGridView1.Rows[1].Cells[1].Value.ToString()+ "\"";
-            
-            Process.Start("cmd.exe ", @"/C "+@comm);
+            if (dataGridView1.RowCount > 1) button1.Text = dataGridView1.Rows[0].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount > 2) button2.Text = dataGridView1.Rows[1].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount > 3) button3.Text = dataGridView1.Rows[2].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount > 4) button4.Text = dataGridView1.Rows[3].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount > 5) button5.Text = dataGridView1.Rows[4].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount > 6) button6.Text = dataGridView1.Rows[5].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount > 7) button7.Text = dataGridView1.Rows[6].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount > 8) button8.Text = dataGridView1.Rows[7].Cells[0].Value.ToString();
+            if (dataGridView1.RowCount > 9) button9.Text = dataGridView1.Rows[8].Cells[0].Value.ToString();
         }
     }
 }
