@@ -39,6 +39,7 @@ namespace ComdShell
         {
             InitializeComponent();
         }
+        string path = @"comdshell.txt";
         public void writeCSV(DataGridView gridIn, string outputFile)
         {
             //test to see if the DataGridView has any rows
@@ -151,7 +152,7 @@ namespace ComdShell
 
         private void button11_Click(object sender, EventArgs e)
         {
-            writeCSV(dataGridView1, @"e:\!\comdshell.txt");
+            writeCSV(dataGridView1, @path);
 
             
         }
@@ -209,10 +210,8 @@ namespace ComdShell
         {
             run_pro(9);
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            //  aa1.name = dataGridView1;
+        void init_grid_button()
+        {   //  aa1.name = dataGridView1;
             //    aa1.init(4, 9, 1,1);
             int i = 0;
             //описываем виртуальную таблицу 
@@ -239,7 +238,7 @@ namespace ComdShell
             //else path = @Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\rozklad.csv";
             //else path = @"G:\project\excell_rozklad\rozklad.csv";
             //string path = @"rozklad.csv";
-            string path = @"e:\!\comdshell.txt";
+
             string[] tab0 = File.ReadAllLines(path, Encoding.UTF8);
 
             string[] tab0Values = null;
@@ -275,6 +274,20 @@ namespace ComdShell
             if (dataGridView1.RowCount > 7) button7.Text = dataGridView1.Rows[6].Cells[0].Value.ToString();
             if (dataGridView1.RowCount > 8) button8.Text = dataGridView1.Rows[7].Cells[0].Value.ToString();
             if (dataGridView1.RowCount > 9) button9.Text = dataGridView1.Rows[8].Cells[0].Value.ToString();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            init_grid_button();          
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            writeCSV(dataGridView1, @path);
+        }
+
+        private void tabControl1_Click(object sender, EventArgs e)
+        {
+            init_grid_button();
         }
     }
 }
